@@ -28,23 +28,31 @@ AnsiConsole.Write(new FigletText("Welcome CourseApp").Centered().Color(Color.Dar
 while (true)
 {
 Options: GetOp();
-Operations: string op = Console.ReadLine();
 
-    if (op == "1")
+Option: string optionstr = Console.ReadLine();
+    int option;
+    bool isCorrectOption = int.TryParse(optionstr, out option);
+
+    if (isCorrectOption)
     {
-        accauntControllers.Register();
-        goto Options;
+        switch (option)
+        {
+            case (int)AccauntOperationTypes.register:
+                accauntControllers.Register();
+                goto Options;
+            case (int)AccauntOperationTypes.login:
+                accauntControllers.LogIn();
+                break;
+            default:
+                ConsoleColor.Red.WriteConsole("Operation is wrong,please try again:");
+                goto Options;
 
-    }
-    else if (op == "2")
-    {
-        accauntControllers.LogIn();
-
+        }
     }
     else
     {
-        ConsoleColor.Red.WriteConsole("Operation is wrong,please try again:");
-        goto Operations;
+        ConsoleColor.Red.WriteConsole("Operation format is wrong,please try again");
+        goto Option;
     }
 
     AnsiConsole.Write(new FigletText("Menu").Centered().Color(Color.Blue1));
@@ -68,6 +76,7 @@ Operations: string op = Console.ReadLine();
                 groupController.GetAll();
                 goto Case;
             case (int)GroupOperationTypes.GroupEdit:
+                groupController.Edit();
                 goto Case;
             case (int)GroupOperationTypes.GroupDelete:
                 groupController.Delete();
@@ -88,6 +97,7 @@ Operations: string op = Console.ReadLine();
                 studentController.GetAll();
                 goto Case;
             case (int)StudentOperationType.StudentEdit:
+                studentController.StudentEdit();
                 goto Case;
             case (int)StudentOperationType.StudentDelete:
                 studentController.Delete();

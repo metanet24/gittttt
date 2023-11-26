@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using Domain.Models;
 using Repository.Data;
 using System.Xml.Linq;
+using System.Numerics;
+using System.Net;
 
 namespace CourseApp.Controllers
 {
@@ -36,28 +38,35 @@ namespace CourseApp.Controllers
             int id;
             bool isCorrectId = int.TryParse(IdStr, out id);
 
-            var res=_groupService.GetById(id);
-           
-
-            if (string.IsNullOrEmpty(IdStr))
+            if (isCorrectId)
             {
-                ConsoleColor.DarkRed.WriteConsole(CommonMessages.RequiredMessages(message));
-                goto Id;
-            }
+                var res = _groupService.GetById(id);
+                if (res == null)
+                {
+                    Console.WriteLine("There is no such ID group,please try again");
+                    goto Id;
+                }
 
-            if (res.Id == id)
-            {
-                
-                goto Create;
+                if (string.IsNullOrEmpty(IdStr))
+                {
+                    ConsoleColor.DarkRed.WriteConsole(CommonMessages.RequiredMessages(message));
+                    goto Id;
+                }
+
+                if (res.Id == id)
+                {
+
+                    goto Create;
+                }
+
+               
             }
             else
             {
+                ConsoleColor.Red.WriteConsole("Format is wrong,please try again");
                 goto Id;
             }
-           
-
-
-
+            
             Create: ConsoleColor.Yellow.WriteConsole("Add FullName:");
             FullName: string Fullname = Console.ReadLine();
 
@@ -87,22 +96,27 @@ namespace CourseApp.Controllers
             }
 
 
-          
-
-             
 
             ConsoleColor.Yellow.WriteConsole("Add age:");
 
-        Age: string AgeStr = Console.ReadLine();
+            Age: string AgeStr = Console.ReadLine();
 
             int age;
             bool isCorrectAge = int.TryParse(AgeStr, out age);
 
             if (isCorrectAge)
             {
-
+                if (age > 18 && age <65)
+                {
                 _studentService.Create(new Student { FullName = Fullname, Address = Adress, Age = age, Phone = Phone },id);
                 ConsoleColor.Green.WriteConsole("Student create is succes");
+                }
+                else
+                {
+                    ConsoleColor.Red.WriteConsole("The age limit of students is 18-65.");
+                    goto Age;
+                }
+               
 
             }
             else
@@ -168,32 +182,97 @@ namespace CourseApp.Controllers
 
         public void SearchFullName()
         {
+            ConsoleColor.Blue.WriteConsole("Please write FullName for searching:");
             string FullName=Console.ReadLine();
             var students=_studentService.SearchByFullName(FullName);
             foreach ( var student in students )
       
             {
                
-                    ConsoleColor.Yellow.WriteConsole(student.FullName + " " + student.Address + " " + student.Age + " " + student.Phone+" "+student.Group.Name);
+              ConsoleColor.Yellow.WriteConsole(student.FullName + " " + student.Address + " " + student.Age + " " + student.Phone+" "+student.Group.Name);
                 
             }
+
+           
         }
 
         public void SortByAge()
         {
-           
-                ConsoleColor.Blue.WriteConsole("Please,add sort text");
-                string sortText = Console.ReadLine();
-                var res = _studentService.SortedByAge(sortText);
 
-                foreach (var student in res)
-                {
-                    ConsoleColor.Blue.WriteConsole(student.FullName+" "+student.Group.Name+" "+student.Address+" "+student.Phone+" "+student.Age);
-                }
+            ConsoleColor.Blue.WriteConsole("Please,add sort text");
+            string sortText = Console.ReadLine();
+            var res = _studentService.SortedByAge(sortText);
 
-            
+            foreach (var student in res)
+            {
+                ConsoleColor.Blue.WriteConsole(student.FullName);
+            }
+
+
+
+
         }
 
+
+        public void StudentEdit()
+        {
+            ConsoleColor.Blue.WriteConsole("Please add Id for editing:");
+            Id: string IdStr = Console.ReadLine();
+
+            int id;
+            bool isCorrectId = int.TryParse(IdStr, out id);
+
+            if (isCorrectId)
+            {
+                var group = _studentService.GetById(id);
+
+                ConsoleColor.Magenta.WriteConsole("Please,add Fullname");
+                string Fullname=Console.ReadLine();
+
+                ConsoleColor.Magenta.WriteConsole("Please,add adress");
+                string adress = Console.ReadLine();
+
+                ConsoleColor.Magenta.WriteConsole("Please,add phone");
+                string phone = Console.ReadLine();
+
+                ConsoleColor.Magenta.WriteConsole("Please,add GroupId");
+                Age: string AgeStr = Console.ReadLine();
+                int age;
+                bool isCorrectAge = int.TryParse(AgeStr, out age);
+                if (!isCorrectAge)
+                {
+                    ConsoleColor.Red.WriteConsole("Format is wrong,please try again:");
+                    goto Age;
+                }
+
+                ConsoleColor.Magenta.WriteConsole("Please,add Group Id ");
+               
+                GroupId: string Idstr = Console.ReadLine();
+                
+                int groupId;
+                bool isCorrectGroupId = int.TryParse(Idstr, out groupId);
+                if (!isCorrectAge)
+                {
+                    ConsoleColor.Red.WriteConsole("Format is wrong,please try again:");
+                    goto Age;
+                }
+                else
+                {
+                     var response = _groupService.GetById(groupId);
+                }
+
+                _studentService.Edit(id, new Student { FullName = Fullname, Address = adress, Age = age, Phone = phone });
+                
+                ConsoleColor.Green.WriteConsole("Student edit is succes");
+
+
+
+            }
+            else
+            {
+                ConsoleColor.Red.WriteConsole("Format is wrong,please try again:");
+            }
+        }
 
     }
 

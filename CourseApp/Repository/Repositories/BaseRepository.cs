@@ -26,11 +26,7 @@ namespace Repository.Repositories
              AppDbContext<T>.Datas.Remove(entity);
         }
 
-        public void Edit(T entity)
-        {
-            throw new NotImplementedException();
-        }
-
+      
         public List<T> GetAll()
         {
             return AppDbContext<T>.Datas.ToList();

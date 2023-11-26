@@ -3,6 +3,7 @@ using Repository.Data;
 using Service.Helpers.Extensions;
 using Service.Services;
 using Service.Services.Interfaces;
+using System.Collections.Generic;
 
 
 namespace CourseApp.Controllers
@@ -37,9 +38,9 @@ namespace CourseApp.Controllers
             }
 
             ConsoleColor.DarkMagenta.WriteConsole("Please,add age:");
-            Age: string age = Console.ReadLine();
+        Age: string age = Console.ReadLine();
 
-            int agetxt;
+            AgeStart: int agetxt;
 
             bool IsTrue=int.TryParse(age, out agetxt);
             if(!IsTrue)
@@ -47,12 +48,24 @@ namespace CourseApp.Controllers
                 ConsoleColor.Red.WriteConsole("Format is wrong,please try again");
                 goto Age;
             }
-
             if(string.IsNullOrEmpty(age))
             {
                 ConsoleColor.DarkRed.WriteConsole(CommonMessages.RequiredMessages(message));
                 goto Age;
             }
+            if (agetxt>18 && agetxt<65)
+            {
+                
+            }
+            else
+            {
+                ConsoleColor.Red.WriteConsole("The age limit of students is 18 - 65");
+                goto Age;
+            }
+
+         
+
+            
 
             ConsoleColor.DarkMagenta.WriteConsole("Please,add email:");
             Email:string email=Console.ReadLine();

@@ -12,5 +12,8 @@ namespace Repository.Repositories.Interfaces
         List<Group> SearchByName(string groupName);
 
         List<Group> SortedByCapacity(string sortText);
+
+        void Edit(int id, Group group );
+
     }
 }

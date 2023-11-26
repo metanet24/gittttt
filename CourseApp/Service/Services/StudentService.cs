@@ -35,9 +35,9 @@ namespace Service.Services
             _studentRepository.Delete(student);
         }
 
-        public void Edit(Student student)
+        public void Edit(int id,Student student)
         {
-            throw new NotImplementedException();
+            _studentRepository.Edit(id, student);
         }
 
         public List<Student> GetAll()
@@ -57,7 +57,7 @@ namespace Service.Services
 
         public List<Student> SortedByAge(string sortText)
         {
-            throw new NotImplementedException();
+            return _studentRepository.SortedByAge(sortText);
         }
     }
 }

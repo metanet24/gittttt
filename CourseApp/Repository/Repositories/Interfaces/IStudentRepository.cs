@@ -12,5 +12,9 @@ namespace Repository.Repositories.Interfaces
         List<Student> SearchByFullName(string FullName);
 
         List<Student> SortedByAge(string sortText);
+
+        void Edit(int id, Student student);
+
+
     }
 }
